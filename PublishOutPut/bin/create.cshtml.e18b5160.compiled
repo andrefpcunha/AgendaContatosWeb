@@ -1,0 +1,6 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<preserve resultType="2" virtualPath="/Views/Contato/Create.cshtml" hash="519dfbe6" filehash="1acfe7b9f27c" flags="110000" assembly="App_Web_3x0bip4g" type="ASP._Page_Views_Contato_Create_cshtml">
+    <filedeps>
+        <filedep name="/Views/Contato/Create.cshtml" />
+    </filedeps>
+</preserve>

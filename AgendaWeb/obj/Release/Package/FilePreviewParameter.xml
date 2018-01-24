@@ -1,0 +1,10 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<parameters>
+  <parameter name="IIS Web Application Name" description="" value="AgendaWeb" tags="IisApp">
+    <parameterEntry kind="ProviderPath" scope="IisApp" match="^D:\\Projects\\Particular\\AgendaWeb\\AgendaWeb\\obj\\Release\\Package\\PackageTmp$" />
+    <parameterEntry kind="ProviderPath" scope="setAcl" match="^D:\\Projects\\Particular\\AgendaWeb\\AgendaWeb\\obj\\Release\\Package\\PackageTmp$" />
+  </parameter>
+  <parameter name="dbconnection-Web.config Connection String" description="" value="Data Source=localhost;Initial Catalog=agendaweb;User ID=sms_user;Password=@user2017" tags="">
+    <parameterEntry kind="XmlFile" scope="D:\\Projects\\Particular\\AgendaWeb\\AgendaWeb\\obj\\Release\\Package\\PackageTmp\\Web\.config$" match="/configuration/connectionStrings/add[@name='dbconnection']/@connectionString" />
+  </parameter>
+</parameters>

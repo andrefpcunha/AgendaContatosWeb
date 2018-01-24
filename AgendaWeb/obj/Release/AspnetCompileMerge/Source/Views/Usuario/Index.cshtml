@@ -1,0 +1,36 @@
+﻿@model IEnumerable<AgendaWeb.Models.UsuarioModel>
+
+@{
+    ViewBag.Title = "Dados do usuário";
+}
+
+<h2>@ViewBag.Title</h2>
+
+
+<div style="margin-top:10px;">
+    <table class="table table-responsive table-hover" id="tblUsuarios">
+        <thead>
+            <tr>
+                <th>
+                    @Html.DisplayNameFor(model => model.nome)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.email)
+                </th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var item in Model)
+            {
+                <tr>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.nome)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.email)
+                    </td>
+                </tr>
+            }
+        </tbody>
+</table>
+</div>

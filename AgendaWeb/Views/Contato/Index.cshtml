@@ -1,0 +1,208 @@
+﻿@model IEnumerable<AgendaWeb.Models.ContatoModel>
+
+@{
+    ViewBag.Title = "Contatos";
+}
+
+
+<h2>@ViewBag.Title</h2>
+<div class="form-group ">
+    <div class="col-md-2">
+        <span>
+            @*<a href="@Url.Action("Create")" class="btn btn-success">
+                    <span class="glyphicon glyphicon-plus-sign"></span>
+                    NOVO
+                </a>*@
+            <button class="btn btn-success btn-novo" data-toggle="modal" data-target="#myModal">
+                <span class="glyphicon glyphicon-plus-sign"></span>
+                NOVO
+            </button>
+        </span>
+    </div>
+    <div class="col-md-1">
+        <label style="margin-top:5px;" class="control-label">Pesquisar</label>
+    </div>
+    <div id="Pesquisa" class="col-md-4">
+        <input class="form-control" type="text" placeholder="digite para pesquisar"/>
+    </div>
+</div>
+
+<div style="margin-top:50px;">
+    <table id="tblContato" class="table table-bordered table-striped table-hover table-responsive">
+        <thead>
+            <tr>
+                <th>
+                    @Html.DisplayNameFor(model => model.nome)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.telefone)
+                </th>
+                <th>Ação</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var item in Model)
+            {
+                <tr data-id="item.ID">
+                    <td>
+                        @Html.DisplayFor(modelItem => item.nome)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.telefone)
+                    </td>
+                    <td>
+                        <div class="btn btn-warning btn-editar"
+                             data-toggle="modal" data-target="#myModal" data-edit-id="@item.ID">Editar</div>
+
+                        <a href="@Url.Action("Delete", new { id = item.ID })" class="btn btn-danger btn-sm btn-excluir">
+                            <span class="glyphicon glyphicon-trash"></span>
+                            Excluir
+                        </a>
+                        <div class="btn btn-info delete-confirm" style="display:none" data-delete-id="@item.ID">Confirma?</div>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+</div>
+<!-- Modal -->
+<div style="padding-top:15px;" class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+                <h4 class="modal-title" id="myModalLabel">@ViewBag.Title</h4>
+            </div>
+            <div id="loadModal" class="modal-body" >
+                
+            </div>
+            @*<div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal">Sair</button>
+                <button type="button" class="btn btn-primary">Salvar</button>
+            </div>*@
+        </div>
+    </div>
+</div>
+
+@section scripts{
+    @*Filtro de pesquisa*@
+    <script>
+        $(function () {
+            $("#Pesquisa input").keyup(function () {
+
+                var index = 0; //
+                var nth = "#tblContato td:nth-child(" + (index + 1).toString() + ")";
+                var valor = $(this).val().toUpperCase();
+
+                $("#tblContato tbody tr").show();
+
+                $(nth).each(function () {
+                    if ($(this).text().toUpperCase().indexOf(valor) < 0) {
+                        $(this).parent().hide();
+                    }
+                });
+            });
+
+            $("#tblContato input").blur(function () {
+                $(this).val("");
+            });
+        });
+    </script>
+
+    @* Abrir Modal para Novo e Editar *@
+    <script>
+        $(function () {
+            $(".btn-novo").click(function () {
+                $("#loadModal").load("/contato/create").alert();
+                });
+            });
+
+
+            $(".btn-editar").click(function () {
+                var editButton = $(this),
+                    url = '@Url.Action("Edit","Contato")',
+                    id = editButton.attr('data-edit-id'),
+                    param = { 'id': id },
+                    urlFull = url+'/'+id;
+
+                $.post(
+                    url,
+                    param,
+                    function (response) {
+                        if (response)
+                        {
+                            $("#loadModal").load(urlFull).alert();
+                            return false;
+                        }
+                    }
+                )
+            });
+        });
+    </script>
+
+    @* Script para Excluir contato *@
+    <script type="text/javascript">
+    $(function () {
+        $("a.btn-excluir").click(function () {
+            var deleteLink = $(this);
+            deleteLink.hide();
+            var confirmButton = deleteLink.siblings(".delete-confirm");
+            confirmButton.show();
+
+            var cancelDelete =  function () {
+                removeEvents();
+                showDeleteLink();
+            };
+
+            var deleteItem = function () {
+                removeEvents();
+                confirmButton.hide();
+                $.post(
+                    '@Url.Action("Delete")',
+                    AddAntiForgeryToken({ id: confirmButton.attr('data-delete-id') }))
+                   .done(function () {
+                       var parentRow = deleteLink.parents("tr:first");
+                       parentRow.fadeOut('fast', function () {
+                           parentRow.remove();
+                       });
+                   }).fail(function (data) {
+                       alert("error");
+                   });
+                return false;
+            };
+
+            var removeEvents = function () {
+                confirmButton.off("click", deleteItem);
+                $(document).on("click", cancelDelete);
+                $(document).off("keypress", onKeyPress);
+            };
+
+            var showDeleteLink = function () {
+                confirmButton.hide();
+                deleteLink.show();
+            };
+
+            var onKeyPress = function (e) {
+                //Cancel if escape key pressed
+                if (e.which == 27) {
+                    cancelDelete();
+                }
+            };
+
+            confirmButton.on("click", deleteItem);
+            $(document).on("click", cancelDelete);
+            $(document).on("keypress", onKeyPress);
+
+            return false;
+        });
+
+        AddAntiForgeryToken = function (data) {
+            data.__RequestVerificationToken = $('input[name=__RequestVerificationToken]').val();
+            return data;
+        };
+    });
+    </script>
+
+}

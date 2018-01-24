@@ -1,0 +1,43 @@
+﻿body {
+    padding-top: 50px;
+    padding-bottom: 20px;
+}
+
+/* evitar que o conteúdo atinja as bordas */
+.body-content {
+    padding-left: 15px;
+    padding-right: 15px;
+}
+
+.navbar-inverse {
+    background-color: #3a87ad !important;
+}
+
+.navbar-brand {
+    color: #ffffff !important;
+}
+
+.navbar-inverse .navbar-brand:hover,
+.navbar-inverse .navbar-brand:focus {
+    color: #999999 !important;
+    background-color: transparent;
+}
+
+.navbar-nav {
+    color: #ffffff !important;
+    margin-right: 30px !important;
+    margin-left: 2px !important;
+}
+
+.navbar-inverse .navbar-nav:hover,
+.navbar-inverse .navbar-nav:focus {
+    color: #999999 !important;
+    background-color: transparent;
+    margin-right: 30px !important;
+    margin-left: 2px !important;
+}
+
+.tb-list {
+    padding:170px;
+}
+
